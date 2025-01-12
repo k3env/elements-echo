@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"embed"
 	_ "embed"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	htmlt "html/template"
 	"net/http"
@@ -91,7 +92,7 @@ func (m *StopLightMiddleware) template() ([]byte, error) {
 		return nil, err
 	}
 	buf := new(bytes.Buffer)
-	err = t.Execute(buf, map[string]string{"Path": m.urlPrefix})
+	err = t.Execute(buf, map[string]string{"Path": m.urlPrefix, "SwaggerFile": fmt.Sprintf("swagger.%s", m.specFormat)})
 	if err != nil {
 		return nil, err
 	}
