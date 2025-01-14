@@ -80,6 +80,11 @@ func New(urlPrefix string) *StopLightMiddleware {
 func (m *StopLightMiddleware) Handle() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
+			url := ctx.Request().URL.Path
+			stripped := strings.TrimPrefix(url, m.urlPrefix)
+			if len(stripped) == len(url) {
+				return next(ctx)
+			}
 			m.httpHandler(ctx.Response(), ctx.Request())
 			if ctx.Response().Committed {
 				return nil
