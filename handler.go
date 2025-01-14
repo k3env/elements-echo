@@ -25,6 +25,9 @@ var styles string
 //go:embed template/web-components.min.js
 var script string
 
+//go:embed template/styles.override.css
+var overrides string
+
 type StopLightMiddleware struct {
 	urlPrefix   string
 	specContent []byte
@@ -146,6 +149,12 @@ func (m *StopLightMiddleware) httpHandler(w http.ResponseWriter, req *http.Reque
 		header.Set("Content-Type", "text/css")
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(styles))
+		return
+	}
+	if strippedPrefix == "/overrides.css" {
+		header.Set("Content-Type", "text/css")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(overrides))
 		return
 	}
 	if strippedPrefix == "/favicon.png" {
